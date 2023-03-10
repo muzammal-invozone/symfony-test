@@ -1,0 +1,82 @@
+<style>
+    /* Table Styles */
+    table {
+        border-collapse: collapse;
+        width: 80%;
+        margin: 0px auto;
+    }
+
+    th,
+    td {
+        text-align: left;
+        padding: 8px;
+    }
+
+    th {
+        background-color: #008080;
+        color: white;
+    }
+
+    tr:nth-child(even) {
+        background-color: #f2f2f2;
+    }
+    h1{
+        text-align: center;
+    }
+    .redirect-button {
+        display: inline-block;
+        padding: 10px 20px;
+        background-color: #ff0000;
+        color: #ffffff;
+        font-size: 16px;
+        text-align: center;
+        text-decoration: none;
+        border-radius: 5px;
+        border: none;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+    }
+
+    .redirect-button:hover {
+        background-color: #cc0000;
+    }
+</style>
+
+<table>
+    <h1>Favourite Fruites</h1>
+    <thead>
+ 
+        <tr>
+            <th>ID</th>
+            <th>Name</th>
+            <th>Genus</th>
+            <th>Family</th>
+            <th>Order</th>
+            <th>Nutrition Sum</th>
+            
+        </tr>
+    </thead>
+    <tbody>
+        {% for item in data %}
+        <tr>
+        
+            <td>{{ item.id }}</td>
+            <td>{{ item.name }}</td>
+            <td>{{ item.genus }}</td>
+            <td>{{ item.family }}</td>
+            <td>{{ item.fruit_order }}</td>
+            <td>{{ item.nutritions | count_nutrition }}</td>
+            
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+<br>
+<button class="redirect-button" id="redirect">Go To Fruits Page</button>
+
+<script>
+  const button = document.getElementById('redirect');
+  button.addEventListener('click', function() {
+    window.location.href = "{{ path('fruits') }}";
+  });
+</script>

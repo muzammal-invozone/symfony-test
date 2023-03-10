@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <title>My Fruit Email Template</title>
+    <style>
+      /* CSS styles go here */
+      .fruit {
+        font-size: 24px;
+        font-weight: bold;
+        color: #FFA500; /* orange */
+        text-transform: capitalize;
+      }
+    </style>
+  </head>
+  <body>
+    <p>Hello there,</p>
+    <p>These are the added fruits: 
+    <span class="fruit">
+     {% for name in fruit_names %}
+        <li>{{ name }}</li>
+    {% endfor %},
+    </span></p>
+    <p>Best regards</p>
+  </body>
+</html>

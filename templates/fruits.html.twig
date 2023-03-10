@@ -1,0 +1,211 @@
+<style>
+    /* Table Styles */
+    table {
+        border-collapse: collapse;
+        width: 80%;
+        margin: 0px auto;
+    }
+
+    th,
+    td {
+        text-align: left;
+        padding: 8px;
+    }
+
+    th {
+        background-color: #008080;
+        color: white;
+    }
+
+    tr:nth-child(even) {
+        background-color: #f2f2f2;
+    }
+
+    /* Pagination Styles */
+    .pagination {
+        display: flex;
+        justify-content: flex-end;
+        list-style: none;
+        padding: 0;
+        width: 80%;
+    }
+
+    .pagination li {
+        margin-left: 5px;
+    }
+
+    .pagination a {
+        display: block;
+        padding: 5px 10px;
+        border: 1px solid #008080;
+        background-color: white;
+        color: #008080;
+        text-decoration: none;
+        transition: all 0.3s ease;
+    }
+
+    .pagination a:hover {
+        background-color: #008080;
+        color: white;
+    }
+
+    .pagination .active a {
+        background-color: #008080;
+        color: white;
+    }
+
+    .pagination .disabled a {
+        color: lightgray;
+        pointer-events: none;
+    }
+   .search-container {
+        display: flex;
+        align-items: center;
+        width: 80%;
+        margin: 0px auto;
+        margin-bottom: 5px;
+    }
+
+    .search-container input[type="text"] {
+        width: 70%;
+        padding: 12px 20px;
+        margin-right: 10px;
+        border: 2px solid #ccc;
+        border-radius: 4px;
+        box-sizing: border-box;
+    }
+
+    .search-container button[type="submit"] {
+        width: 30%;
+        background-color: #008080;
+        color: white;
+        padding: 14px 20px;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+    }
+
+    .search-container button[type="submit"]:hover {
+        background-color: #008080;
+    }
+    .redirect-button {
+        display: inline-block;
+        padding: 10px 20px;
+        background-color: #ff0000;
+        color: #ffffff;
+        font-size: 16px;
+        text-align: center;
+        text-decoration: none;
+        border-radius: 5px;
+        border: none;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+    }
+
+    .redirect-button:hover {
+        background-color: #cc0000;
+    }
+     h1{
+        text-align: center;
+    }
+</style>
+
+<link src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.3.0/css/all.min.css" />
+
+
+<table>
+<h1>All Fruites</h1>
+<div class="search-container">
+  <form on="{{ path('fruits') }}" method="get">
+    <input type="text" name="searchValue" placeholder="Search...">
+    <button type="submit">Search</button>
+  </form>
+</div>
+
+    <thead>
+ 
+        <tr>
+            <th>ID</th>
+            <th>Name</th>
+            <th>Genus</th>
+            <th>Family</th>
+            <th>Order</th>
+            <th>Add to favourite</th>
+            
+        </tr>
+    </thead>
+    <tbody>
+        {% for item in data %}
+        <tr>
+        
+            <td>{{ item.id }}</td>
+            <td>{{ item.name }}</td>
+            <td>{{ item.genus }}</td>
+            <td>{{ item.family }}</td>
+            <td>{{item.fruit_order}}</td>
+            <td>
+            
+            {% if item.status == 1 %}
+                <button class="btn" data-id="{{ item.id }}">UnFavourite</button>
+            {% else %}
+                <button class="btn" data-id="{{ item.id }}">Favourite</button>
+            {% endif %}
+
+
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+<nav aria-label="Page navigation">
+    <ul class="pagination">
+        {{ knp_pagination_render(data) }}
+    </ul>
+</nav>
+
+<br>
+<button class="redirect-button" id="redirect">Go To Favourites Page</button>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+
+<script>
+    $('.btn').click(function() {
+        const id = $(this).data('id');
+        let value = $(this).html();
+        let status = '';
+        if(value === 'Favourite'){
+            status = '1';
+        }
+        addToFavourite(id , status)
+    });
+
+    function addToFavourite(id , status){
+        const params = {
+            id,
+            status,
+        };
+        $.ajax({
+            url: "{{ path('add_favourite') }}",
+            type: 'POST',
+            data: params,
+            success: function(response) {
+                console.log(response.data , '@response')
+                if(response.status === 'success'){
+                    const text = response.data.status ? 'UnFavourite' : 'Favourite';
+                    $(`[data-id=${id}]`).html(text);
+                    alert(`Fruit Added to ${text}`);
+                }else{
+                    alert(`${response.message}`);
+                }
+            },
+            error: function() {
+                alert('Something went wrong');
+            }
+        });
+    }
+    const button = document.getElementById('redirect');
+    button.addEventListener('click', function() {
+        window.location.href = "{{ path('favourites') }}";
+    });
+</script>
